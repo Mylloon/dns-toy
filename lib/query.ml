@@ -14,11 +14,8 @@ let header_to_bytes header =
 ;;
 
 let question_to_bytes question =
-  let buffer1 = new_buffer question [ question.type_; question.class_ ] in
-  let buffer2 = Buffer.create (Bytes.length question.name + Bytes.length buffer1) in
-  Buffer.add_bytes buffer2 question.name;
-  Buffer.add_bytes buffer2 buffer1;
-  buffer2
+  let buffer = new_buffer question [ question.type_; question.class_ ] in
+  Bytes.cat buffer question.name
 ;;
 
 let encode_dns_name domain_name =
