@@ -3,7 +3,7 @@ open Utils
 
 let header_to_bytes header =
   new_buffer
-    header
+    (2 * get_obj_size header)
     [ header.id
     ; header.flags
     ; header.num_questions
@@ -14,7 +14,9 @@ let header_to_bytes header =
 ;;
 
 let question_to_bytes question =
-  let buffer = new_buffer question [ question.type_; question.class_ ] in
+  let buffer =
+    new_buffer (2 * (get_obj_size question - 1)) [ question.type_; question.class_ ]
+  in
   Bytes.cat buffer question.name
 ;;
 

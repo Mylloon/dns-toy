@@ -11,8 +11,9 @@ let get_bytecode data =
   String.concat "" result
 ;;
 
-let new_buffer obj list =
-  let size = 2 * Obj.size (Obj.repr obj) in
+let get_obj_size obj = Obj.size (Obj.repr obj)
+
+let new_buffer size list =
   let buffer = Bytes.create size in
   let verification =
     List.fold_left
