@@ -17,7 +17,7 @@ let question_to_bytes question =
   let buffer =
     new_buffer (2 * (get_obj_size question - 1)) [ question.type_; question.class_ ]
   in
-  Bytes.cat buffer question.name
+  Bytes.cat question.name buffer
 ;;
 
 let encode_dns_name domain_name =
