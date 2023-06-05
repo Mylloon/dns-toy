@@ -1,7 +1,7 @@
-open Dnstoy.Utils
+open Dnstoy
 
 let () =
-  let data =
+  let data : Types.dns_header =
     { id = 0x1314
     ; flags = 0
     ; num_questions = 1
@@ -12,6 +12,7 @@ let () =
   in
   assert (
     "\\x13\\x14\\x00\\x00\\x00\\x01\\x00\\x00\\x00\\x00\\x00\\x00"
-    = get_bytecode (header_to_bytes data));
-  assert ("\\x06google\\x03com\\x00" = get_bytecode (encode_dns_name "google.com"))
+    = Utils.get_bytecode (Query.header_to_bytes data));
+  assert (
+    "\\x06google\\x03com\\x00" = Utils.get_bytecode (Query.encode_dns_name "google.com"))
 ;;
