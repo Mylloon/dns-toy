@@ -1,2 +1,3 @@
 (library
- (name dnstoy))
+ (name dnstoy)
+ (modules utils))
