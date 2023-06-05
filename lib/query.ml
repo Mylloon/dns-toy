@@ -32,3 +32,23 @@ let encode_dns_name domain_name =
   in
   Bytes.cat (Bytes.concat Bytes.empty encoded_parts) (Bytes.of_string "\x00")
 ;;
+
+let build ?(id = None) domain_name record_type =
+  let class_IN = 1 in
+  let header =
+    { id =
+        (match id with
+         | Some i -> i
+         | None -> Random.int 65535)
+    ; flags = 1 lsl 8
+    ; num_questions = 1
+    ; num_answers = 0
+    ; num_authorities = 0
+    ; num_additionals = 0
+    }
+  in
+  let question =
+    { name = encode_dns_name domain_name; type_ = record_type; class_ = class_IN }
+  in
+  Bytes.cat (header_to_bytes header) (question_to_bytes question)
+;;

@@ -17,5 +17,10 @@ let () =
   (* Dns name *)
   let dns_name = Query.encode_dns_name "google.com" in
   assert ("\\x06google\\x03com\\x00" = Utils.get_bytecode dns_name);
-  assert (6 = Char.code (Bytes.get dns_name 0))
+  assert (6 = Char.code (Bytes.get dns_name 0));
+  (* Query *)
+  let type_A = 1 in
+  assert (
+    "\\x15\\xB3\\x01\\x00\\x00\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x07example\\x03com\\x00\\x00\\x01\\x00\\x01"
+    = Utils.get_bytecode (Query.build ~id:(Some 5555) "example.com" type_A))
 ;;
