@@ -27,8 +27,8 @@ let new_buffer size list =
   buffer
 ;;
 
-let unpack_short_be reader offset =
-  let msb = int_of_char (Bytes.get reader offset) in
-  let lsb = int_of_char (Bytes.get reader (offset + 1)) in
+let unpack_short_be data offset =
+  let msb = int_of_char (Bytes.get data offset) in
+  let lsb = int_of_char (Bytes.get data (offset + 1)) in
   (msb lsl 8) + lsb
 ;;
