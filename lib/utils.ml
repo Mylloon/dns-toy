@@ -26,3 +26,9 @@ let new_buffer size list =
   if verification != size then failwith "Issue converting header to bytes";
   buffer
 ;;
+
+let unpack_short_be reader offset =
+  let msb = int_of_char (Bytes.get reader offset) in
+  let lsb = int_of_char (Bytes.get reader (offset + 1)) in
+  (msb lsl 8) + lsb
+;;

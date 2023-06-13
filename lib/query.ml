@@ -13,7 +13,7 @@ let header_to_bytes header =
     ]
 ;;
 
-let question_to_bytes question =
+let question_to_bytes (question : dns_question) =
   let buffer =
     new_buffer (2 * (get_obj_size question - 1)) [ question.type_; question.class_ ]
   in
