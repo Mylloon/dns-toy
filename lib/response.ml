@@ -13,8 +13,9 @@ let parse_header reader =
 let rec parse_question reader =
   let reader', name_b = decode_name_simple reader in
   let name = String.to_bytes name_b in
-  match List.init 2 (fun offset -> unpack_short_be reader' (offset * 2)) with
-  | [ type_; class_ ] -> { name; type_; class_ }
+  let max_size = 2 in
+  match List.init max_size (fun offset -> unpack_short_be reader' (offset * 2)) with
+  | [ type_; class_ ] -> bytes_forward reader' (max_size * 2), { name; type_; class_ }
   | _ -> failwith "Invalid number of fields"
 
 and decode_name_simple reader =
@@ -29,4 +30,9 @@ and decode_name_simple reader =
   in
   let offset, parts = read_parts [] 0 in
   bytes_forward reader offset, String.concat "." parts
+;;
+
+let parse_record _reader =
+  let name, type_, class_, ttl, data = Bytes.empty, 0, 0, 0, Bytes.empty in
+  { name; type_; class_; ttl; data }
 ;;

@@ -17,3 +17,13 @@ let print_dns_question (question : Types.dns_question) =
     question.type_
     question.class_
 ;;
+
+let print_dns_record (record : Types.dns_record) =
+  Printf.printf
+    "{ name = '%s'; type_ = %d; class_ = %d; ttl = %d; data = '%s' }\n"
+    (Bytes.to_string record.name)
+    record.type_
+    record.class_
+    record.ttl
+    (Bytes.to_string record.data)
+;;

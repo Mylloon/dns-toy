@@ -12,3 +12,11 @@ type dns_question =
   ; type_ : int
   ; class_ : int
   }
+
+type dns_record =
+  { name : bytes
+  ; type_ : int
+  ; class_ : int
+  ; ttl : int
+  ; data : bytes
+  }
