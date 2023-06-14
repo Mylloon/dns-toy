@@ -20,3 +20,8 @@ type dns_record =
   ; ttl : int
   ; data : bytes
   }
+
+type reader =
+  { data : bytes
+  ; pointer : int
+  }
