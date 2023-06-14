@@ -28,7 +28,7 @@ and decode_name_simple reader =
     else if length land 0b1100_0000 <> 0
     then (
       let decoded_name = decode_compressed_name reader length in
-      length + 1, decoded_name :: parts)
+      2, decoded_name :: parts)
     else (
       let part = Bytes.sub_string reader.data (reader.pointer + pos + 1) length in
       let last_length, parts' = read_parts (parts @ [ part ]) (pos + 1 + length) in
