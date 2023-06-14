@@ -25,9 +25,8 @@ let encode_dns_name domain_name =
   let encoded_parts =
     List.map
       (fun part ->
-        let len_part = String.length part in
-        let len_byte = Char.chr len_part in
-        Bytes.cat (Bytes.of_string (String.make 1 len_byte)) (Bytes.of_string part))
+        let len_part = char_of_int (String.length part) in
+        Bytes.cat (Bytes.of_string (String.make 1 len_part)) (Bytes.of_string part))
       parts
   in
   Bytes.cat (Bytes.concat Bytes.empty encoded_parts) (Bytes.of_string "\x00")
