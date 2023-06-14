@@ -32,3 +32,5 @@ let unpack_short_be data offset =
   let lsb = int_of_char (Bytes.get data (offset + 1)) in
   (msb lsl 8) + lsb
 ;;
+
+let bytes_forward data offset = Bytes.sub data offset (Bytes.length data - offset)
