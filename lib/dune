@@ -1,4 +1,4 @@
 (library
  (name dnstoy)
- (modules types utils network query response)
+ (modules types utils debug network query response)
  (libraries unix))
