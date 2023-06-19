@@ -1,7 +1,7 @@
 open Types
 open Utils
 
-let parse_header reader =
+let parse_header (reader : reader) =
   let max_size = 6 in
   match List.init max_size (fun offset -> unpack_short_be reader.data (offset * 2)) with
   | [ id; flags; num_questions; num_answers; num_authorities; num_additionals ] ->
@@ -10,7 +10,7 @@ let parse_header reader =
   | _ -> failwith "Invalid number of fields"
 ;;
 
-let rec parse_question reader =
+let rec parse_question (reader : reader) =
   let name, offset_name = decode_name reader in
   let data = bytes_forward reader.data (reader.pointer + offset_name) in
   let max_size = 2 in
