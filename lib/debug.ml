@@ -29,13 +29,19 @@ let dns_record ?(json = false) (record : Types.dns_record) =
 ;;
 
 let dns_packet (record : Types.dns_packet) =
-  let list fn l = String.concat ", " (List.map (fun el -> fn el) l) in
+  let list l =
+    String.concat
+      ", "
+      (match l with
+       | `Question lq -> List.map (fun el -> dns_question el) lq
+       | `Record lr -> List.map (fun el -> dns_record ~json:true el) lr)
+  in
   Printf.sprintf
     "{ \"header\": %s, \"questions\": [%s], \"answers\": [%s], \"authorities\": [%s], \
      \"additionals\": [%s] }"
     (dns_header record.header)
-    (list dns_question record.questions)
-    (list dns_record record.answers)
-    (list dns_record record.authorities)
-    (list dns_record record.additionals)
+    (list (`Question record.questions))
+    (list (`Record record.answers))
+    (list (`Record record.authorities))
+    (list (`Record record.additionals))
 ;;
