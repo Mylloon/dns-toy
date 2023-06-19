@@ -18,14 +18,14 @@ let dns_question (question : Types.dns_question) =
     question.class_
 ;;
 
-let dns_record (record : Types.dns_record) =
+let dns_record ?(json = false) (record : Types.dns_record) =
   Printf.sprintf
     "{ \"name\": \"%s\", \"type_\": %d, \"class_\": %d, \"ttl\": %d, \"data\": \"%s\" }"
     (Bytes.to_string record.name)
     record.type_
     record.class_
     record.ttl
-    (Utils.get_bytecode ~json:true record.data)
+    (Utils.get_bytecode ~json record.data)
 ;;
 
 let dns_packet (record : Types.dns_packet) =
