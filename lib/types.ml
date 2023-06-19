@@ -1,3 +1,8 @@
+type reader =
+  { data : bytes
+  ; pointer : int
+  }
+
 type dns_header =
   { id : int
   ; flags : int
@@ -19,9 +24,4 @@ type dns_record =
   ; class_ : int
   ; ttl : int
   ; data : bytes
-  }
-
-type reader =
-  { data : bytes
-  ; pointer : int
   }
