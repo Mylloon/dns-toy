@@ -59,14 +59,23 @@ let parse_record reader =
 ;;
 
 let parse_dns_packet data =
-  let reader, dns_header = parse_header { data; pointer = 0 } in
-  (* Quid du pointeur du reader, pas récupéré à chaque itération... *)
-  { header = dns_header
-  ; questions = List.init dns_header.num_questions (fun _ -> snd (parse_question reader))
-  ; answers = List.init dns_header.num_answers (fun _ -> snd (parse_record reader))
-  ; authorities =
-      List.init dns_header.num_authorities (fun _ -> snd (parse_record reader))
-  ; additionals =
-      List.init dns_header.num_additionals (fun _ -> snd (parse_record reader))
-  }
+  let rec create_list reader n fn acc =
+    print_int n;
+    if n = 0
+    then reader, List.rev acc
+    else (
+      let next_reader, res = fn reader in
+      create_list next_reader (n - 1) fn (res :: acc))
+  in
+  let reader, header = parse_header { data; pointer = 0 } in
+  let reader2, questions = create_list reader header.num_questions parse_question [] in
+  let reader3, answers = create_list reader2 header.num_answers parse_record [] in
+  let reader4, authorities = create_list reader3 header.num_authorities parse_record [] in
+  let _, additionals = create_list reader4 header.num_additionals parse_record [] in
+  (* print_endline (Debug.dns_header header);
+  List.iter (fun el -> print_endline (Debug.dns_question el)) questions;
+  List.iter (fun el -> print_endline (Debug.dns_record el)) answers;
+  List.iter (fun el -> print_endline (Debug.dns_record el)) authorities;
+  List.iter (fun el -> print_endline (Debug.dns_record el)) additionals; *)
+  { header; questions; answers; authorities; additionals }
 ;;
