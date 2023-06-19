@@ -1,15 +1,24 @@
 let get_bytecode ?(json = false) data =
-  let backslash = if json then "\\\\" else "\\" in
+  let backslash = '\\' in
   let result =
-    List.map
-      (fun byte ->
-        let code = Char.code byte in
-        if code >= 65 && code <= 122
-        then String.make 1 byte
-        else Printf.sprintf "%sx%02X" backslash code)
-      (List.of_seq (Bytes.to_seq data))
+    String.concat
+      ""
+      (List.map
+         (fun byte ->
+           let code = Char.code byte in
+           if code >= 65 && code <= 122
+           then String.make 1 byte
+           else Printf.sprintf "%cx%02X" backslash code)
+         (List.of_seq (Bytes.to_seq data)))
   in
-  String.concat "" result
+  if json
+  then
+    String.concat
+      ""
+      (List.map
+         (fun c -> if c = backslash then String.make 2 c else String.make 1 c)
+         (List.of_seq (String.to_seq result)))
+  else result
 ;;
 
 let get_obj_size obj = Obj.size (Obj.repr obj)
