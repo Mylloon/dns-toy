@@ -60,7 +60,6 @@ let parse_record reader =
 
 let parse_dns_packet data =
   let rec create_list reader n fn acc =
-    print_int n;
     if n = 0
     then reader, List.rev acc
     else (
