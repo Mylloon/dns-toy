@@ -45,8 +45,12 @@ and decode_compressed_name reader length =
 ;;
 
 let parse_record reader =
-  let name, _offset_name = decode_name reader in
-  (* TODO *)
-  let type_, class_, ttl, data = 0, 0, 0, Bytes.empty in
-  { name; type_; class_; ttl; data }
+  let name, offset_name = decode_name reader in
+  let data = bytes_forward reader.data (offset_name + reader.pointer) in
+  { name
+  ; type_ = unpack_short_be data 0
+  ; class_ = unpack_short_be data 2
+  ; ttl = unpack_int_be data 4
+  ; data = Bytes.sub data 10 (unpack_short_be data 8)
+  }
 ;;
