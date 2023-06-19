@@ -25,3 +25,11 @@ type dns_record =
   ; ttl : int
   ; data : bytes
   }
+
+type dns_packet =
+  { header : dns_header
+  ; questions : dns_question list
+  ; answers : dns_record list
+  ; authorities : dns_record list
+  ; additionals : dns_record list
+  }

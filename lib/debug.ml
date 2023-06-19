@@ -27,3 +27,15 @@ let dns_record (record : Types.dns_record) =
     record.ttl
     (Utils.get_bytecode ~json:true record.data)
 ;;
+
+let dns_packet (record : Types.dns_packet) =
+  let list fn l = String.concat ", " (List.map (fun el -> fn el) l) in
+  Printf.sprintf
+    "{ \"header\": %s, \"questions\": [%s], \"answers\": [%s], \"authorities\": [%s], \
+     \"additionals\": [%s] }"
+    (dns_header record.header)
+    (list dns_question record.questions)
+    (list dns_record record.answers)
+    (list dns_record record.authorities)
+    (list dns_record record.additionals)
+;;

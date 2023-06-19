@@ -47,10 +47,26 @@ and decode_compressed_name reader length =
 let parse_record reader =
   let name, offset_name = decode_name reader in
   let data = bytes_forward reader.data (offset_name + reader.pointer) in
-  { name
-  ; type_ = unpack_short_be data 0
-  ; class_ = unpack_short_be data 2
-  ; ttl = unpack_int_be data 4
-  ; data = Bytes.sub data 10 (unpack_short_be data 8)
+  let data_len = unpack_short_be data 8 in
+  let record_len = 10 in
+  ( { reader with pointer = reader.pointer + offset_name + record_len + data_len }
+  , { name
+    ; type_ = unpack_short_be data 0
+    ; class_ = unpack_short_be data 2
+    ; ttl = unpack_int_be data 4
+    ; data = Bytes.sub data record_len data_len
+    } )
+;;
+
+let parse_dns_packet data =
+  let reader, dns_header = parse_header { data; pointer = 0 } in
+  (* Quid du pointeur du reader, pas récupéré à chaque itération... *)
+  { header = dns_header
+  ; questions = List.init dns_header.num_questions (fun _ -> snd (parse_question reader))
+  ; answers = List.init dns_header.num_answers (fun _ -> snd (parse_record reader))
+  ; authorities =
+      List.init dns_header.num_authorities (fun _ -> snd (parse_record reader))
+  ; additionals =
+      List.init dns_header.num_additionals (fun _ -> snd (parse_record reader))
   }
 ;;
