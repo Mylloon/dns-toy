@@ -25,5 +25,5 @@ let print_dns_record (record : Types.dns_record) =
     record.type_
     record.class_
     record.ttl
-    (Bytes.to_string record.data)
+    (Utils.get_bytecode record.data)
 ;;
