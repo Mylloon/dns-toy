@@ -25,7 +25,9 @@ let dns_record ?(json = false) (record : Types.dns_record) =
     record.type_
     record.class_
     record.ttl
-    (Utils.get_bytecode ~json record.data)
+    (if Bytes.length record.data = 4
+     then Utils.get_ip record.data
+     else Utils.get_bytecode ~json record.data)
 ;;
 
 let dns_packet (record : Types.dns_packet) =

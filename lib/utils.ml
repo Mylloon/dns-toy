@@ -21,6 +21,14 @@ let get_bytecode ?(json = false) data =
   else result
 ;;
 
+let get_ip ip =
+  Bytes.fold_left
+    (fun acc n ->
+      Printf.sprintf "%s%s%d" acc (if acc = "" then "" else ".") (int_of_char n))
+    ""
+    ip
+;;
+
 let get_obj_size obj = Obj.size (Obj.repr obj)
 
 let new_buffer size list =
