@@ -27,7 +27,9 @@ and decode_name reader =
     then 1, parts
     else if length land 0b1100_0000 <> 0
     then (
-      let decoded_name = decode_compressed_name reader length in
+      let decoded_name =
+        decode_compressed_name { reader with pointer = reader.pointer + pos } length
+      in
       2, decoded_name :: parts)
     else (
       let part = Bytes.sub_string reader.data (reader.pointer + pos + 1) length in
@@ -38,9 +40,12 @@ and decode_name reader =
   String.to_bytes (String.concat "." parts), offset
 
 and decode_compressed_name reader length =
-  let pointer =
-    (length land 0b0011_1111) + int_of_char (Bytes.get reader.data (reader.pointer + 1))
+  let pointer_bytes =
+    Bytes.cat
+      (int_to_bytes (length land 0b0011_1111))
+      (Bytes.sub reader.data (reader.pointer + 1) 1)
   in
+  let pointer = unpack_short_be pointer_bytes 0 in
   String.of_bytes (fst (decode_name { reader with pointer }))
 ;;
 

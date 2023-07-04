@@ -51,6 +51,12 @@ let unpack_short_be data offset =
   (msb lsl 8) + lsb
 ;;
 
+let int_to_bytes n =
+  let byte_array = Bytes.create 1 in
+  Bytes.set byte_array 0 (Char.chr (n land 255));
+  byte_array
+;;
+
 let unpack_int_be data offset =
   let byte1 = int_of_char (Bytes.get data offset) in
   let byte2 = int_of_char (Bytes.get data (offset + 1)) in
