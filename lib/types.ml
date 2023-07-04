@@ -33,3 +33,9 @@ type dns_packet =
   ; authorities : dns_record list
   ; additionals : dns_record list
   }
+
+module DNSType = struct
+  let a = 1
+  let ns = 2
+  let txt = 16
+end
