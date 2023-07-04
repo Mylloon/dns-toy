@@ -49,12 +49,25 @@ let parse_record reader =
   let data = bytes_forward reader.data (offset_name + reader.pointer) in
   let data_len = unpack_short_be data 8 in
   let record_len = 10 in
+  let type_ = unpack_short_be data 0 in
   ( { reader with pointer = reader.pointer + offset_name + record_len + data_len }
   , { name
-    ; type_ = unpack_short_be data 0
+    ; type_
     ; class_ = unpack_short_be data 2
     ; ttl = unpack_int_be data 4
-    ; data = Bytes.sub data record_len data_len
+    ; data =
+        (let raw_data = Bytes.sub data record_len data_len in
+         match type_ with
+         | v when v = DNSType.ns ->
+           print_endline "aaaaaaaaaaaaa";
+           let r1, r2 =
+             decode_name
+               { reader with pointer = reader.pointer + offset_name + record_len }
+           in
+           Printf.printf "%s - %d\n" (String.of_bytes r1) r2;
+           r1
+         | v when v = DNSType.a -> String.to_bytes (get_ip raw_data)
+         | _ -> raw_data)
     } )
 ;;
 
