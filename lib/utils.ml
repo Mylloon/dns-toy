@@ -6,7 +6,7 @@ let get_bytecode ?(json = false) data =
       (List.map
          (fun byte ->
            let code = Char.code byte in
-           if code >= 65 && code <= 122
+           if code >= 32 && code <= 126
            then String.make 1 byte
            else Printf.sprintf "%cx%02X" backslash code)
          (List.of_seq (Bytes.to_seq data)))
