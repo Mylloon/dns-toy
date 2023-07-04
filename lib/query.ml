@@ -39,7 +39,7 @@ let build ?(id = None) domain_name record_type =
         (match id with
          | Some i -> i
          | None -> Random.int 65535)
-    ; flags = 1 lsl 8
+    ; flags = 0
     ; num_questions = 1
     ; num_answers = 0
     ; num_authorities = 0
