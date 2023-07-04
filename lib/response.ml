@@ -58,15 +58,11 @@ let parse_record reader =
     ; data =
         (let raw_data = Bytes.sub data record_len data_len in
          match type_ with
-         | v when v = DNSType.ns ->
-           print_endline "aaaaaaaaaaaaa";
-           let r1, r2 =
-             decode_name
-               { reader with pointer = reader.pointer + offset_name + record_len }
-           in
-           Printf.printf "%s - %d\n" (String.of_bytes r1) r2;
-           r1
-         | v when v = DNSType.a -> String.to_bytes (get_ip raw_data)
+         | t when t = DNSType.ns ->
+           fst
+             (decode_name
+                { reader with pointer = reader.pointer + offset_name + record_len })
+         | t when t = DNSType.a -> String.to_bytes (get_ip raw_data)
          | _ -> raw_data)
     } )
 ;;
