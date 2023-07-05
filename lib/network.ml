@@ -40,7 +40,12 @@ and resolve_aux nameserver domain_name record_type =
        (match get_nameserver response with
         | Some ns_domain ->
           resolve_aux (resolve ns_domain DNSType.a) domain_name record_type
-        | None -> raise (Failure "Something went wrong")))
+        | None ->
+          (match get_alias response with
+           | Some cname_domain ->
+             resolve_aux (resolve cname_domain DNSType.a) domain_name record_type
+           | None ->
+             raise (Failure ("Something went wrong - " ^ Debug.dns_packet response)))))
 
 and get_answer packet =
   match List.find_opt (fun el -> el.type_ = DNSType.a) packet.answers with
@@ -53,7 +58,16 @@ and get_nameserver_ip packet =
   | None -> None
 
 and get_nameserver packet =
-  match List.find_opt (fun el -> el.type_ = DNSType.ns) packet.authorities with
+  match
+    List.find_opt
+      (fun el -> el.type_ = DNSType.ns || el.type_ = DNSType.soa)
+      packet.authorities
+  with
+  | Some record -> Some (String.of_bytes record.data)
+  | None -> None
+
+and get_alias packet =
+  match List.find_opt (fun el -> el.type_ = DNSType.cname) packet.answers with
   | Some record -> Some (String.of_bytes record.data)
   | None -> None
 ;;

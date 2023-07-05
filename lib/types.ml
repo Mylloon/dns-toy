@@ -37,5 +37,7 @@ type dns_packet =
 module DNSType = struct
   let a = 1
   let ns = 2
+  let cname = 5
+  let soa = 6
   let txt = 16
 end

@@ -1,3 +1,3 @@
 open Dnstoy
 
-let () = print_endline (Network.resolve "www.mylloon.fr" Types.DNSType.a)
+let () = print_endline (Network.resolve "www.facebook.com" Types.DNSType.a)
